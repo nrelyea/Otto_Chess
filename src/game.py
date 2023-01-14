@@ -1,13 +1,13 @@
 import pygame
 
 from const import *
-from board import Board
+from displayboard import DisplayBoard
 from dragger import Dragger
 
 class Game:
 
     def __init__(self):
-        self.board = Board()
+        self.displayBoard = DisplayBoard()
         self.dragger = Dragger()
 
     def show_bg(self, surface):
@@ -25,8 +25,8 @@ class Game:
     def show_pieces(self, surface):
         for row in range(ROWS):
             for col in range(COLS):
-                if self.board.squares[row][col].has_piece():
-                    piece = self.board.squares[row][col].piece
+                if self.displayBoard.squares[row][col].has_piece():
+                    piece = self.displayBoard.squares[row][col].piece
 
                     # all pieces except dragger piece
                     if piece is not self.dragger.piece:

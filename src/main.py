@@ -18,7 +18,7 @@ class Main:
 
         screen = self.screen
         game = self.game
-        board = self.game.board
+        displayBoard = self.game.displayBoard
         dragger = self.game.dragger
 
         while True:
@@ -38,8 +38,8 @@ class Main:
                     clicked_col = dragger.mouseX // SQSIZE
 
                     # if clicked square has piece
-                    if board.squares[clicked_row][clicked_col].has_piece():
-                        piece = board.squares[clicked_row][clicked_col].piece
+                    if displayBoard.squares[clicked_row][clicked_col].has_piece():
+                        piece = displayBoard.squares[clicked_row][clicked_col].piece
                         dragger.save_initial(event.pos)
                         dragger.drag_piece(piece)
 

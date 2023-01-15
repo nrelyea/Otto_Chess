@@ -9,26 +9,31 @@ class DisplayBoard:
     def __init__(self):
         self.squares = [[0,0,0,0,0,0,0,0] for col in range(COLS)]
 
-        self.activeBoard = chess.Board()
-        #print(self.activeBoard)
+        self.activeBoard = chess.Board()    # create default inital chess board
+        
 
         self._create()
-        self._update_pieces()
-
-
+        self._update_pieces()     
 
     def _create(self):
         for row in range(ROWS):
             for col in range(COLS):
                 self.squares[row][col] = Square(row, col)
+       
 
     def _update_pieces(self):
+
+        #print(self.activeBoard)
+
+        # Clear previous squares state
+        self._create()
+
         for squareNum in range(0,64):           
             if self.activeBoard.piece_at(squareNum) != None:
                 piece = self.activeBoard.piece_at(squareNum)
                 row = self._square_num_to_coords(squareNum)[0]
                 col = self._square_num_to_coords(squareNum)[1]
-                #print('piece found at ' + str(row) + ',' + str(col))
+                #print('piece found at ' + str(row) + ',' + str(col) + ': ' + str(piece))
                 match str(piece):
                     case 'P':
                         self.squares[row][col] = Square(row, col, Pawn('white'))
@@ -53,12 +58,20 @@ class DisplayBoard:
                     case 'q':
                         self.squares[row][col] = Square(row, col, Queen('black'))
                     case 'k':
-                        self.squares[row][col] = Square(row, col, King('black'))
+                        self.squares[row][col] = Square(row, col, King('black'))           
     
     def _square_num_to_coords(self, num):
         row = int((num)/8)
         col = num - (8 * row)
         row = 7 - row
         return (row, col)
+
+    def CoordsToSquareName(self, coords):
+        row = coords[0]
+        col = coords[1]
+        letters = ['a','b','c','d','e','f','g','h']
+        numbers = [1,2,3,4,5,6,7,8]
+        return str(letters[col]) + str(numbers[7-row])
+
 
                     

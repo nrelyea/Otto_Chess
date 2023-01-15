@@ -1,6 +1,7 @@
 from socket import gaierror
 import pygame
 import sys
+import chess
 
 
 from const import *
@@ -53,6 +54,30 @@ class Main:
 
                 # click release
                 elif event.type == pygame.MOUSEBUTTONUP:
+                    if dragger.dragging:
+                        dragger.update_mouse(event.pos)
+
+                        released_row = dragger.mouseY // SQSIZE
+                        released_col = dragger.mouseX // SQSIZE
+
+                        startSquareName = displayBoard.CoordsToSquareName((dragger.initial_row,dragger.initial_col))
+                        endSquareName = displayBoard.CoordsToSquareName((released_row,released_col))
+
+                        if startSquareName != endSquareName:
+
+                            proposedMove = startSquareName + endSquareName
+                            #print('Proposed move: ' + proposedMove)
+
+                            if chess.Move.from_uci(proposedMove) in displayBoard.activeBoard.legal_moves:
+                                print("Making move " + proposedMove)
+
+                                displayBoard.activeBoard.push_uci(proposedMove)
+                                displayBoard._update_pieces()
+
+                            else:
+                                print("Move " + proposedMove + " is not legal")
+                        
+
                     dragger.undrag_piece()
 
                 elif event.type == pygame.QUIT:

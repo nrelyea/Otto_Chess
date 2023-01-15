@@ -74,8 +74,15 @@ class Main:
                                 displayBoard.activeBoard.push_uci(proposedMove)
                                 displayBoard._update_pieces()
 
+                            # queening pawn
+                            elif chess.Move.from_uci(proposedMove + 'q') in displayBoard.activeBoard.legal_moves:
+                                print("Making move " + proposedMove + 'q')
+
+                                displayBoard.activeBoard.push_uci(proposedMove + 'q')
+                                displayBoard._update_pieces()
+
                             else:
-                                print("Move " + proposedMove + " is not legal")
+                                print("Move " + proposedMove + " is not legal")                        
                         
 
                     dragger.undrag_piece()

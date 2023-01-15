@@ -11,7 +11,7 @@ class Main:
 
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode( (WIDTH, HEIGHT) )
+        self.screen = pygame.display.set_mode( (WIDTH + SIDEBARSIZE, HEIGHT) )
         pygame.display.set_caption('Chess')
         self.game = Game()
 
@@ -20,6 +20,7 @@ class Main:
         screen = self.screen
         game = self.game
         displayBoard = self.game.displayBoard
+        displayBoard._update_sidebar(screen)
         dragger = self.game.dragger
 
         while True:
@@ -73,6 +74,7 @@ class Main:
 
                                 displayBoard.activeBoard.push_uci(proposedMove)
                                 displayBoard._update_pieces()
+                                displayBoard._update_sidebar(screen)
 
                             # queening pawn
                             elif chess.Move.from_uci(proposedMove + 'q') in displayBoard.activeBoard.legal_moves:
@@ -80,6 +82,7 @@ class Main:
 
                                 displayBoard.activeBoard.push_uci(proposedMove + 'q')
                                 displayBoard._update_pieces()
+                                displayBoard._update_sidebar(screen)
 
                             else:
                                 print("Move " + proposedMove + " is not legal")                        

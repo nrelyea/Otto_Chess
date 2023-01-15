@@ -6,6 +6,9 @@ HEIGHT = 800
 ROWS = 8
 COLS = 8
 
+# Other UI dimensions
+SIDEBARSIZE = 50
+
 SQSIZE = WIDTH // COLS
 
 # Board colors

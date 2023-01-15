@@ -1,4 +1,5 @@
 import chess
+import pygame
 
 from const import *
 from square import Square
@@ -13,7 +14,7 @@ class DisplayBoard:
         
 
         self._create()
-        self._update_pieces()     
+        self._update_pieces()
 
     def _create(self):
         for row in range(ROWS):
@@ -72,6 +73,14 @@ class DisplayBoard:
         letters = ['a','b','c','d','e','f','g','h']
         numbers = [1,2,3,4,5,6,7,8]
         return str(letters[col]) + str(numbers[7-row])
+
+    def _update_sidebar(self, surface):
+        rect = (8 * SQSIZE, 0, SIDEBARSIZE, 8 * SQSIZE)
+               
+        if self.activeBoard.turn == chess.WHITE:
+            pygame.draw.rect(surface, (255,255,255), rect)
+        else:
+            pygame.draw.rect(surface, (0,0,0), rect)
 
 
                     

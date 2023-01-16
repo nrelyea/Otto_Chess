@@ -37,31 +37,42 @@ class DisplayBoard:
                 row = self._square_num_to_coords(squareNum)[0]
                 col = self._square_num_to_coords(squareNum)[1]
                 #print('piece found at ' + str(row) + ',' + str(col) + ': ' + str(piece))
-                match str(piece):
+
+                if(self.flipped):
+                    row = 7 - row
+                    col = 7 - col
+
+                self.squares[row][col] = Square(row, col, self._piece_to_Obj(piece))
+                
+                
+
+    # convert board piece to correct Class Obj
+    def _piece_to_Obj(self, piece):
+        match str(piece):
                     case 'P':
-                        self.squares[row][col] = Square(row, col, Pawn('white'))
+                        return Pawn('white')
                     case 'N':
-                        self.squares[row][col] = Square(row, col, Knight('white'))
+                        return Knight('white')
                     case 'B':
-                        self.squares[row][col] = Square(row, col, Bishop('white'))
+                        return Bishop('white')
                     case 'R':
-                        self.squares[row][col] = Square(row, col, Rook('white'))
+                        return Rook('white')
                     case 'Q':
-                        self.squares[row][col] = Square(row, col, Queen('white'))
+                        return Queen('white')
                     case 'K':
-                        self.squares[row][col] = Square(row, col, King('white'))
+                        return King('white')
                     case 'p':
-                        self.squares[row][col] = Square(row, col, Pawn('black'))
+                        return Pawn('black')
                     case 'n':
-                        self.squares[row][col] = Square(row, col, Knight('black'))
+                        return Knight('black')
                     case 'b':
-                        self.squares[row][col] = Square(row, col, Bishop('black'))
+                        return Bishop('black')
                     case 'r':
-                        self.squares[row][col] = Square(row, col, Rook('black'))
+                        return Rook('black')
                     case 'q':
-                        self.squares[row][col] = Square(row, col, Queen('black'))
+                        return Queen('black')
                     case 'k':
-                        self.squares[row][col] = Square(row, col, King('black'))           
+                        return King('black')
     
     def _square_num_to_coords(self, num):
         row = int((num)/8)
@@ -103,6 +114,13 @@ class DisplayBoard:
         textRect = text.get_rect()
         textRect.center = (8 * SQSIZE + (SIDEBARSIZE // 2), 4 * SQSIZE)
         surface.blit(text, textRect)
+    
+    def flip_board(self):
+        self.flipped = not self.flipped
+        print('Flipped? ' + str(self.flipped))
+
+        self._update_pieces()
+        pass
 
 
 

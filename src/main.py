@@ -36,22 +36,33 @@ class Main:
 
                 # click
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.pos[0] < COLS * SQSIZE:        # if clicked on the board
+                    
+                    # if clicked on the board
+                    if event.pos[0] < COLS * SQSIZE:        
                         dragger.update_mouse(event.pos)
 
                         clicked_row = dragger.mouseY // SQSIZE
                         clicked_col = dragger.mouseX // SQSIZE
 
+                        
+
                         # if clicked square has piece
                         if displayBoard.squares[clicked_row][clicked_col].has_piece():
                             piece = displayBoard.squares[clicked_row][clicked_col].piece
-                            dragger.save_initial(event.pos)
+                            
+                            if(displayBoard.flipped):
+                                clicked_row = 7 - clicked_row
+                                clicked_col = 7 - clicked_col
+
+                            dragger.save_initial(clicked_row, clicked_col)
                             dragger.drag_piece(piece)
-                    elif self._is_pos_inside_rect(event.pos, displayBoard.flipButtonRect): # if clicked 'Flip' button
-                        print('clicked Flip')
+
+                    # if clicked 'Flip' button
+                    elif self._is_pos_inside_rect(event.pos, displayBoard.flipButtonRect):
+                        displayBoard.flip_board()
+                        displayBoard._update_pieces()
                     
                    
-
                 # mouse motion
                 elif event.type == pygame.MOUSEMOTION:
                     if dragger.dragging:
@@ -59,6 +70,7 @@ class Main:
                         #game.show_bg(screen)
                         #game.show_pieces(screen)
                         dragger.update_blit(screen)
+
 
                 # click release
                 elif event.type == pygame.MOUSEBUTTONUP:
@@ -68,6 +80,10 @@ class Main:
                         released_row = dragger.mouseY // SQSIZE
                         released_col = dragger.mouseX // SQSIZE
 
+                        if(displayBoard.flipped):
+                            released_row = 7 - released_row
+                            released_col = 7 - released_col
+
                         startSquareName = displayBoard.CoordsToSquareName((dragger.initial_row,dragger.initial_col))
                         endSquareName = displayBoard.CoordsToSquareName((released_row,released_col))
 
@@ -76,23 +92,36 @@ class Main:
                             proposedMove = startSquareName + endSquareName
                             #print('Proposed move: ' + proposedMove)
 
-                            if chess.Move.from_uci(proposedMove) in displayBoard.activeBoard.legal_moves:
-                                print("Making move " + proposedMove)
+                            legalMoveMade = False
 
-                                displayBoard.activeBoard.push_uci(proposedMove)     # MAKE MOVE
-                                displayBoard._update_pieces()
-                                displayBoard._update_sidebar(screen)
+                            if chess.Move.from_uci(proposedMove) in displayBoard.activeBoard.legal_moves:
+
+                                # MAKE MOVE
+                                print("Making move " + proposedMove)
+                                displayBoard.activeBoard.push_uci(proposedMove)
+                                legalMoveMade = True     
 
                             # queening pawn
                             elif chess.Move.from_uci(proposedMove + 'q') in displayBoard.activeBoard.legal_moves:
+                                
+                                # MAKE MOVE (queening)
                                 print("Making move " + proposedMove + 'q')
+                                displayBoard.activeBoard.push_uci(proposedMove + 'q')     
+                                legalMoveMade = True 
 
-                                displayBoard.activeBoard.push_uci(proposedMove + 'q')     # MAKE MOVE (queening)
+                            else:
+                                print("Move " + proposedMove + " is not legal")   
+
+
+                            # if legal move has been made
+                            if legalMoveMade:
                                 displayBoard._update_pieces()
                                 displayBoard._update_sidebar(screen)
 
-                            else:
-                                print("Move " + proposedMove + " is not legal")                        
+                                if(displayBoard.activeBoard.is_checkmate()):
+                                    print('### Checkmate! ###')
+
+
                         
 
                     dragger.undrag_piece()

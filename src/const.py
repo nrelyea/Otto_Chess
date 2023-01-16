@@ -16,6 +16,6 @@ SQSIZE = WIDTH // COLS
 LIGHTCOLOR = (234,235,200)
 DARKCOLOR = (119,154,88)
 
-# Eval Preferences
+# Eval indicator Preferences
 EVALCOLOR = (152,251,152)
 EVALINDICATORWIDTH = 10

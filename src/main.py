@@ -13,7 +13,7 @@ class Main:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode( (WIDTH + SIDEBARSIZE, HEIGHT) )
-        pygame.display.set_caption('Chess')
+        pygame.display.set_caption('Chess - Otto Bot')
         self.game = Game()
 
     def mainloop(self):
@@ -24,7 +24,7 @@ class Main:
 
         displayBoard.update_sidebar(screen)
 
-        suggestedMove = 'e2e4'
+        suggestedMove = ''
         displayBoard.update_eval_indicator(screen, suggestedMove)
 
         dragger = self.game.dragger
@@ -50,7 +50,6 @@ class Main:
                         clicked_col = dragger.mouseX // SQSIZE
 
                         
-
                         # if clicked square has piece
                         if displayBoard.squares[clicked_row][clicked_col].has_piece():
                             piece = displayBoard.squares[clicked_row][clicked_col].piece
@@ -66,6 +65,14 @@ class Main:
                     elif self._is_pos_inside_rect(event.pos, displayBoard.flipButtonRect):
                         displayBoard.flip_board()
                         displayBoard._update_pieces()
+                    
+                    # if clicked 'Eval' button
+                    elif self._is_pos_inside_rect(event.pos, displayBoard.evalModeButtonRect):
+                        displayBoard.change_eval_mode()
+                        displayBoard.update_sidebar(screen)
+
+                        # update shown eval / suggested move
+                        suggestedMove = self._update_return_suggested_move(displayBoard)
                     
                    
                 # mouse motion
@@ -126,13 +133,11 @@ class Main:
                                     print('### Checkmate! ###')
                                 else:
 
-                                    ### EVALUATION ###
+                                    ### Eval Move (or return '' if no eval needed) ### 
 
-                                    eval = Evaluation()
-                                    suggestedMove = eval.suggest_move(displayBoard.activeBoard)
-                                    print('Suggesting move ' + suggestedMove)
+                                    suggestedMove = self._update_return_suggested_move(displayBoard)  
 
-                                    pass
+                                    
                                     
                         
 
@@ -152,6 +157,18 @@ class Main:
             pos[1] > rect[1] and pos[1] < rect[1] + rect[3]
         ): return True
         return False
+        
+    def _update_return_suggested_move(self, dispBoard):
+        if dispBoard._should_eval():
+            eval = Evaluation()
+            move = eval.suggest_move(dispBoard.activeBoard)
+            print('Suggesting move ' + move)
+            return move
+        else:
+            return ''
+
+
+            
 
 main = Main()
 main.mainloop()

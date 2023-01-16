@@ -11,10 +11,13 @@ class DisplayBoard:
         self.squares = [[0,0,0,0,0,0,0,0] for col in range(COLS)]
 
         self.flipped = False
+        self.evalMode = 'Me'
+
         self.activeBoard = chess.Board()    # create default inital chess board
 
         self.flipButtonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 4 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
-        
+        self.evalModeButtonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 5 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
+
         self._create()
         self._update_pieces()
 
@@ -25,8 +28,6 @@ class DisplayBoard:
        
 
     def _update_pieces(self):
-
-        #print(self.activeBoard)
 
         # Clear previous squares state
         self._create()
@@ -119,6 +120,7 @@ class DisplayBoard:
             pygame.draw.rect(surface, (0,0,0), mainRect)
         
         self._draw_Flip_Button(surface)
+        self._draw_Eval_Mode_Button(surface)
     
     def _draw_Flip_Button(self, surface):
         buttonColor = (130, 190, 245)
@@ -140,12 +142,40 @@ class DisplayBoard:
         pass
 
     def update_eval_indicator(self, surface, suggestedMove):
-        startCoords = self._square_name_to_coords(suggestedMove[:2])
-        endCoords = self._square_name_to_coords(suggestedMove[2:4])
 
-        #print('drawing line from ' + str(self._coords_to_pixel_coords(startCoords)) + ' to ' + str(self._coords_to_pixel_coords(endCoords)))
-        pygame.draw.line(surface, EVALCOLOR, self._coords_to_pixel_coords(startCoords), self._coords_to_pixel_coords(endCoords),EVALINDICATORWIDTH)
+        if(len(suggestedMove) > 0):
+            startCoords = self._square_name_to_coords(suggestedMove[:2])
+            endCoords = self._square_name_to_coords(suggestedMove[2:4])
+
+            #print('drawing line from ' + str(self._coords_to_pixel_coords(startCoords)) + ' to ' + str(self._coords_to_pixel_coords(endCoords)))
+            pygame.draw.line(surface, EVALCOLOR, self._coords_to_pixel_coords(startCoords), self._coords_to_pixel_coords(endCoords),EVALINDICATORWIDTH)
 
 
+    def _draw_Eval_Mode_Button(self, surface):
+        buttonColor = (255, 204, 203)
+        buttonTextColor = (0,0,0)
+
+        pygame.draw.rect(surface, buttonColor, self.evalModeButtonRect)
+
+        font = pygame.font.Font('freesansbold.ttf', 14)
+        text = font.render('Eval: ' + self.evalMode, True, buttonTextColor, buttonColor)
+        textRect = text.get_rect()
+        textRect.center = (8 * SQSIZE + (SIDEBARSIZE // 2), 5 * SQSIZE)
+        surface.blit(text, textRect)
+    
+    def change_eval_mode(self):
+        match(self.evalMode):
+            case 'Me': self.evalMode = 'Both'
+            case 'Both': self.evalMode = 'None'
+            case 'None': self.evalMode = 'Me'
+    
+    def _should_eval(self):
+        if self.evalMode == 'Me' and self.activeBoard.turn == chess.WHITE and not self.flipped:
+            return True
+        elif self.evalMode == 'Me' and self.activeBoard.turn == chess.BLACK and self.flipped:
+            return True
+        elif self.evalMode == 'Both':
+            return True
+        return False
 
                     

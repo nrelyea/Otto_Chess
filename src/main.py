@@ -24,7 +24,7 @@ class Main:
 
         displayBoard.update_sidebar(screen)
 
-        suggestedMove = ''
+        suggestedMove = self._update_return_suggested_move(displayBoard)
         displayBoard.update_eval_indicator(screen, suggestedMove)
 
         dragger = self.game.dragger
@@ -65,13 +65,16 @@ class Main:
                     elif self._is_pos_inside_rect(event.pos, displayBoard.flipButtonRect):
                         displayBoard.flip_board()
                         displayBoard._update_pieces()
+
+                        # update shown eval / suggested move if needed
+                        suggestedMove = self._update_return_suggested_move(displayBoard)
                     
                     # if clicked 'Eval' button
                     elif self._is_pos_inside_rect(event.pos, displayBoard.evalModeButtonRect):
                         displayBoard.change_eval_mode()
                         displayBoard.update_sidebar(screen)
 
-                        # update shown eval / suggested move
+                        # update shown eval / suggested move if needed
                         suggestedMove = self._update_return_suggested_move(displayBoard)
                     
                    

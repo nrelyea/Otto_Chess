@@ -47,6 +47,8 @@ class Main:
                             piece = displayBoard.squares[clicked_row][clicked_col].piece
                             dragger.save_initial(event.pos)
                             dragger.drag_piece(piece)
+                    elif self._is_pos_inside_rect(event.pos, displayBoard.flipButtonRect): # if clicked 'Flip' button
+                        print('clicked Flip')
                     
                    
 
@@ -103,7 +105,12 @@ class Main:
             
             pygame.display.update()
 
-
+    def _is_pos_inside_rect(self, pos, rect):
+        if(
+            pos[0] > rect[0] and pos[0] < rect[0] + rect[2] and
+            pos[1] > rect[1] and pos[1] < rect[1] + rect[3]
+        ): return True
+        return False
 
 main = Main()
 main.mainloop()

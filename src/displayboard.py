@@ -12,6 +12,8 @@ class DisplayBoard:
 
         self.flipped = False
         self.activeBoard = chess.Board()    # create default inital chess board
+
+        self.flipButtonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 4 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
         
         self._create()
         self._update_pieces()
@@ -94,8 +96,7 @@ class DisplayBoard:
         buttonColor = (130, 190, 245)
         buttonTextColor = (0,0,0)
 
-        buttonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 4 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
-        pygame.draw.rect(surface, buttonColor, buttonRect)
+        pygame.draw.rect(surface, buttonColor, self.flipButtonRect)
 
         font = pygame.font.Font('freesansbold.ttf', 32)
         text = font.render('Flip', True, buttonTextColor, buttonColor)

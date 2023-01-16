@@ -20,7 +20,9 @@ class Main:
         screen = self.screen
         game = self.game
         displayBoard = self.game.displayBoard
+
         displayBoard._update_sidebar(screen)
+
         dragger = self.game.dragger
 
         while True:
@@ -34,16 +36,19 @@ class Main:
 
                 # click
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    dragger.update_mouse(event.pos)
+                    if event.pos[0] < COLS * SQSIZE:        # if clicked on the board
+                        dragger.update_mouse(event.pos)
 
-                    clicked_row = dragger.mouseY // SQSIZE
-                    clicked_col = dragger.mouseX // SQSIZE
+                        clicked_row = dragger.mouseY // SQSIZE
+                        clicked_col = dragger.mouseX // SQSIZE
 
-                    # if clicked square has piece
-                    if displayBoard.squares[clicked_row][clicked_col].has_piece():
-                        piece = displayBoard.squares[clicked_row][clicked_col].piece
-                        dragger.save_initial(event.pos)
-                        dragger.drag_piece(piece)
+                        # if clicked square has piece
+                        if displayBoard.squares[clicked_row][clicked_col].has_piece():
+                            piece = displayBoard.squares[clicked_row][clicked_col].piece
+                            dragger.save_initial(event.pos)
+                            dragger.drag_piece(piece)
+                    
+                   
 
                 # mouse motion
                 elif event.type == pygame.MOUSEMOTION:
@@ -55,7 +60,7 @@ class Main:
 
                 # click release
                 elif event.type == pygame.MOUSEBUTTONUP:
-                    if dragger.dragging:
+                    if dragger.dragging and event.pos[0] < COLS * SQSIZE:        # if dragging and released on the board:
                         dragger.update_mouse(event.pos)
 
                         released_row = dragger.mouseY // SQSIZE
@@ -72,7 +77,7 @@ class Main:
                             if chess.Move.from_uci(proposedMove) in displayBoard.activeBoard.legal_moves:
                                 print("Making move " + proposedMove)
 
-                                displayBoard.activeBoard.push_uci(proposedMove)
+                                displayBoard.activeBoard.push_uci(proposedMove)     # MAKE MOVE
                                 displayBoard._update_pieces()
                                 displayBoard._update_sidebar(screen)
 
@@ -80,7 +85,7 @@ class Main:
                             elif chess.Move.from_uci(proposedMove + 'q') in displayBoard.activeBoard.legal_moves:
                                 print("Making move " + proposedMove + 'q')
 
-                                displayBoard.activeBoard.push_uci(proposedMove + 'q')
+                                displayBoard.activeBoard.push_uci(proposedMove + 'q')     # MAKE MOVE (queening)
                                 displayBoard._update_pieces()
                                 displayBoard._update_sidebar(screen)
 
@@ -89,6 +94,8 @@ class Main:
                         
 
                     dragger.undrag_piece()
+
+                    displayBoard._update_sidebar(screen)
 
                 elif event.type == pygame.QUIT:
                     pygame.quit()

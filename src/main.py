@@ -5,6 +5,7 @@ import chess
 
 
 from const import *
+from evaluation import *
 from game import Game
 
 class Main:
@@ -127,8 +128,9 @@ class Main:
 
                                     ### EVALUATION ###
 
-
-
+                                    eval = Evaluation()
+                                    suggestedMove = eval.suggest_move(displayBoard.activeBoard)
+                                    print('Suggesting move ' + suggestedMove)
 
                                     pass
                                     

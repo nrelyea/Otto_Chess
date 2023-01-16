@@ -74,6 +74,8 @@ class DisplayBoard:
                     case 'k':
                         return King('black')
     
+    ##### Conversion Helpers #####
+
     def _square_num_to_coords(self, num):
         row = int((num)/8)
         col = num - (8 * row)
@@ -87,10 +89,25 @@ class DisplayBoard:
         numbers = [1,2,3,4,5,6,7,8]
         return str(letters[col]) + str(numbers[7-row])
 
-    def SquareNameToCoords(self, coords):
-        pass
+    def _square_name_to_coords(self, name):
+        lettersDict = {'a':0,'b':1,'c':2,'d':3,'e':4,'f':5,'g':6,'h':7}
+        col = lettersDict[name[0]]
+        row = 8 - int(name[1])
 
-    def _update_sidebar(self, surface):
+        if self.flipped:
+            row = 7 - row
+            col = 7 - col
+
+        return (row,col)
+    
+    def _coords_to_pixel_coords(self, coords):
+        x = ((coords[1] + 1) * SQSIZE) - SQSIZE // 2
+        y = ((coords[0] + 1) * SQSIZE) - SQSIZE // 2
+        return (x,y)
+
+    ##############################
+
+    def update_sidebar(self, surface):
         borderRect = (8 * SQSIZE, 0, SIDEBARSIZE, 8 * SQSIZE)
         mainRect = (8 * SQSIZE + SIDEBARBORDERSIZE, SIDEBARBORDERSIZE, SIDEBARSIZE - (SIDEBARBORDERSIZE * 2), 8 * SQSIZE - (SIDEBARBORDERSIZE * 2))
                
@@ -117,10 +134,17 @@ class DisplayBoard:
     
     def flip_board(self):
         self.flipped = not self.flipped
-        print('Flipped? ' + str(self.flipped))
+        #print('Flipped? ' + str(self.flipped))
 
         self._update_pieces()
         pass
+
+    def update_eval_indicator(self, surface, suggestedMove):
+        startCoords = self._square_name_to_coords(suggestedMove[:2])
+        endCoords = self._square_name_to_coords(suggestedMove[2:4])
+
+        #print('drawing line from ' + str(self._coords_to_pixel_coords(startCoords)) + ' to ' + str(self._coords_to_pixel_coords(endCoords)))
+        pygame.draw.line(surface, EVALCOLOR, self._coords_to_pixel_coords(startCoords), self._coords_to_pixel_coords(endCoords),EVALINDICATORWIDTH)
 
 
 

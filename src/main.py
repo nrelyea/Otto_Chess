@@ -21,13 +21,17 @@ class Main:
         game = self.game
         displayBoard = self.game.displayBoard
 
-        displayBoard._update_sidebar(screen)
+        displayBoard.update_sidebar(screen)
+
+        suggestedMove = 'e2e4'
+        displayBoard.update_eval_indicator(screen, suggestedMove)
 
         dragger = self.game.dragger
 
         while True:
             game.show_bg(screen)
             game.show_pieces(screen)
+            displayBoard.update_eval_indicator(screen, suggestedMove)
 
             if dragger.dragging:
                 dragger.update_blit(screen)
@@ -116,17 +120,23 @@ class Main:
                             # if legal move has been made
                             if legalMoveMade:
                                 displayBoard._update_pieces()
-                                displayBoard._update_sidebar(screen)
 
                                 if(displayBoard.activeBoard.is_checkmate()):
                                     print('### Checkmate! ###')
+                                else:
+
+                                    ### EVALUATION ###
 
 
+
+
+                                    pass
+                                    
                         
 
                     dragger.undrag_piece()
 
-                    displayBoard._update_sidebar(screen)
+                    displayBoard.update_sidebar(screen)
 
                 elif event.type == pygame.QUIT:
                     pygame.quit()

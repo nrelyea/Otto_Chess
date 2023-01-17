@@ -77,13 +77,24 @@ class Main:
                         # update shown eval / suggested move if needed
                         suggestedMove = self._update_return_suggested_move(displayBoard)
                     
+                     # if clicked 'Undo' button
+                    elif self._is_pos_inside_rect(event.pos, displayBoard.undoButtonRect):
+                        displayBoard.activeBoard.pop()
+                        displayBoard._update_pieces()
+                        displayBoard.update_sidebar(screen)
+                        suggestedMove = self._update_return_suggested_move(displayBoard)
+                        displayBoard.update_eval_indicator(screen, suggestedMove)
+                    
                    
                 # mouse motion
                 elif event.type == pygame.MOUSEMOTION:
                     if dragger.dragging:
                         dragger.update_mouse(event.pos)
+                        
+                        # these two lines address bug with piece ghosting a bit while dragging, but make everything sluggish so dont like
                         #game.show_bg(screen)
                         #game.show_pieces(screen)
+
                         dragger.update_blit(screen)
 
 

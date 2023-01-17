@@ -17,6 +17,7 @@ class DisplayBoard:
 
         self.flipButtonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 4 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
         self.evalModeButtonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 5 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
+        self.undoButtonRect = (8 * SQSIZE + (SIDEBARBORDERSIZE * 2), 3 * SQSIZE - (SIDEBARSIZE - (SIDEBARBORDERSIZE * 4)) // 2, SIDEBARSIZE - (SIDEBARBORDERSIZE * 4), SIDEBARSIZE - (SIDEBARBORDERSIZE * 4))
 
         self._create()
         self._update_pieces()
@@ -121,6 +122,7 @@ class DisplayBoard:
         
         self._draw_Flip_Button(surface)
         self._draw_Eval_Mode_Button(surface)
+        self._draw_Undo_Button(surface)
     
     def _draw_Flip_Button(self, surface):
         buttonColor = (130, 190, 245)
@@ -165,7 +167,8 @@ class DisplayBoard:
     
     def change_eval_mode(self):
         match(self.evalMode):
-            case 'Me': self.evalMode = 'Both'
+            case 'Me': self.evalMode = 'Them'
+            case 'Them': self.evalMode = 'Both'
             case 'Both': self.evalMode = 'None'
             case 'None': self.evalMode = 'Me'
     
@@ -174,8 +177,24 @@ class DisplayBoard:
             return True
         elif self.evalMode == 'Me' and self.activeBoard.turn == chess.BLACK and self.flipped:
             return True
+        if self.evalMode == 'Them' and self.activeBoard.turn == chess.BLACK and not self.flipped:
+            return True
+        elif self.evalMode == 'Them' and self.activeBoard.turn == chess.WHITE and self.flipped:
+            return True
         elif self.evalMode == 'Both':
             return True
         return False
+    
+    def _draw_Undo_Button(self, surface):
+        buttonColor = (255,255,102)
+        buttonTextColor = (0,0,0)
+
+        pygame.draw.rect(surface, buttonColor, self.undoButtonRect)
+
+        font = pygame.font.Font('freesansbold.ttf', 24)
+        text = font.render('Undo', True, buttonTextColor, buttonColor)
+        textRect = text.get_rect()
+        textRect.center = (8 * SQSIZE + (SIDEBARSIZE // 2), 3 * SQSIZE)
+        surface.blit(text, textRect)
 
                     

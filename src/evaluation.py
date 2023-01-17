@@ -16,9 +16,11 @@ class Evaluation:
 
 
 
+
+
     def MIN_MAX(self, board):
 
-        depth = 4       # depth = how many moves ahead to look (must be greated than 1)
+        depth = 4       # depth = how many moves ahead to look (must be greater than 1)
 
         legalMovesList = list(board.legal_moves)  
 
@@ -33,21 +35,32 @@ class Evaluation:
         #for i in range(0,len(legalMovesList)):
             #print('move ' + str(legalMovesList[i]) + ' value: ' + str(moveValueList[i]))
         
-
+        
+        moveOptions = []
         if board.turn == chess.WHITE:
-            index_max = max(range(len(moveValueList)), key=moveValueList.__getitem__)
-            return str(legalMovesList[index_max])            
+            for i in range(0,len(legalMovesList)):
+                if(moveValueList[i] == max(moveValueList)):
+                    moveOptions.append(legalMovesList[i])
+            #index_max = max(range(len(moveValueList)), key=moveValueList.__getitem__)
+            #return str(legalMovesList[index_max])            
         else:
-            index_min = min(range(len(moveValueList)), key=moveValueList.__getitem__)
-            return str(legalMovesList[index_min])
+            for i in range(0,len(legalMovesList)):
+                if(moveValueList[i] == min(moveValueList)):
+                    moveOptions.append(legalMovesList[i])
+            #index_min = min(range(len(moveValueList)), key=moveValueList.__getitem__)
+            #return str(legalMovesList[index_min])
 
+        #just for debug / looking
+        print('move options:')
+        for option in moveOptions:
+            print(str(option))
+        
+        # return random move from set of moves that are optimal value
+        r = random.randint(0,len(moveOptions) - 1)
+        return str(moveOptions[r])
 
-
-
-        #legalMovesList = list(board.legal_moves)        
-        #return str(legalMovesList[0])
     
-
+    # recursive method for minmax
     def _position_value(self, board, depth):
 
         if board.is_checkmate():
@@ -56,8 +69,13 @@ class Evaluation:
             else:           # if black has been mated
                 return 99
         
+        if board.is_stalemate():
+            return 0
+        
         if depth < 1:
             return self.material_balance(board)
+
+        # recursive step
 
         legalMovesList = list(board.legal_moves)
         

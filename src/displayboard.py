@@ -11,7 +11,7 @@ class DisplayBoard:
         self.squares = [[0,0,0,0,0,0,0,0] for col in range(COLS)]
 
         self.flipped = False
-        self.evalMode = 'Me'
+        self.evalMode = 'None'
 
         self.activeBoard = chess.Board()    # create default inital chess board
 

@@ -145,7 +145,6 @@ class Main:
 
                                 if(displayBoard.activeBoard.is_checkmate()):
                                     print('### Checkmate! ###')
-                                    print(displayBoard.activeBoard.turn)
                                 else:
 
                                     ### Eval Move (or return '' if no eval needed) ### 
